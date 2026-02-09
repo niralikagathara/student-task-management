@@ -2,7 +2,7 @@ import React from 'react';
 import '../index.css';
 
 
-function Navbar({title , onLogout}) {
+function Navbar({title , onLogout,onAddTaskBtnClick,isFormOpen}) {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -10,7 +10,10 @@ function Navbar({title , onLogout}) {
       </div>
 
       <div className="navbar-action">
-        <button className="btn-secondry" onClick={onLogout}>Logout</button>
+        <button className={ isFormOpen ?"btn-secondry":'btn-primary'} onClick={onAddTaskBtnClick}>
+          {isFormOpen ? 'close':'Add Task'}
+        </button>
+        <button className= "btn-secondary" onClick={onLogout}>Logout</button>
       </div>
     </nav>
   );
