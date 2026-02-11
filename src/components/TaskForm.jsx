@@ -1,85 +1,95 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
- const TaskForm = ({addTask ,updateTask,editingTask}) => {
-  const [formData, setFormData] = useState({
+const TaskForm = ({addTask,updateTask,editingTask}) => {
+  const navigate = useNavigate();
+  const [TaskData, settaskData] = useState({
     title: "",
-    desc: "",
+    description: "",
     date: "",
-    priority: "Medium",
+    priority: "Low",
   });
 
-  const [error, setError] = useState({});
+  const [errors, setErrors] = useState({});
+
   useEffect(()=>{
-    setFormData(editingTask)
+    settaskData(editingTask)
   },[editingTask])
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
+  const handleInputChange = (e) => {
+    settaskData({
+      ...TaskData,
       [e.target.name]: e.target.value,
     });
-    setError({
-      ...error,
+    setErrors({
+      ...errors,
       [e.target.name]: "",
     });
   };
 
   const validate = () => {
-    const newError = {};
-    if (!formData.title.trim()) {
-      newError.title = "Task title is required";
-    } else if (formData.title.length < 6) {
-      newError.title = "minimum 6 character required";
-    }
-    if (!formData.desc.trim()) {
-      newError.desc = "Description is required";
-    }
-    if (!formData.date.trim()) {
-      newError.date = "Due date is required.";
-    }
-    setError(newError);
-    return Object.keys(newError).length === 0;
-  };
+    const newErrors = {};
 
+    if (!TaskData.title.trim()) {
+      newErrors.title = "title is required.";
+    }else if (TaskData.title.length <= 6) {
+      newErrors.title = "Minimum 6 character required.";
+    }
+     if (!TaskData.date.trim()) {
+      newErrors.date = "Date is required.";
+    }
+
+    if (!TaskData.description.trim()) {
+      newErrors.description = "Description is required.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleAdd = (e) => {
+    console.log(e)
     e.preventDefault();
     if (validate()) {
-      if(editingTask){
-      updateTask(formData)
-    }
-    else{
-      addTask(formData)
-    }
+      if(editingTask)
+      {
+        updateTask(TaskData)
+      }
+      else{
+         addTask(TaskData);
+      alert("Add Task Successfully.......");
+      }
     }
   };
-  
+
+
+
   return (
     <>
       <div className="add-task-card">
         <h2 style={{ marginBottom: "15px" }}>Add New Task</h2>
-        <form onSubmit={handleAdd}>
+        <form>
           <div>
             <input
               type="text"
               placeholder="Task Title"
               name="title"
               id="title"
-              value={formData?.title}
-              onChange={handleChange}
-            ></input>
-            {error.title && <span className="error-msg">{error.title}</span>}
+                value={TaskData?.title}
+              onChange={handleInputChange}
+            />
+            {errors.title && <span className="error-msg">{errors.title}</span>}
+
+            {/* error message placeholder */}
           </div>
 
           <div>
             <textarea
               placeholder="Description"
               rows="3"
-              name="desc"
-              id="desc"
-              value={formData?.desc}
-              onChange={handleChange}
-            ></textarea>
-            {error.desc && <span className="error-msg">{error.desc}</span>}
+              name="description"
+              id="description"
+                value={TaskData?.description}
+              onChange={handleInputChange}
+            />
           </div>
 
           <div style={{ display: "flex", gap: "10px" }}>
@@ -88,49 +98,53 @@ import React, { useEffect, useState } from "react";
                 type="date"
                 name="date"
                 id="date"
-                value={formData?.date}
-                onChange={handleChange}
+                value={TaskData?.date}
+                onChange={handleInputChange}
               />
-              {error.date && <span className="error-msg">{error.date}</span>}
+              {errors.date && (
+                <span className="error-msg">{errors.date}</span>
+              )}
+              {/* error message placeholder */}
             </div>
 
             <div style={{ flex: 1 }}>
               <select
-                name="priority"
+                onChange={handleInputChange}
                 id="priority"
-                value={formData?.priority}
-                onChange={handleChange}
+                name="priority"
+                value={TaskData?.priority}
               >
                 <option value="Low">Low Priority</option>
-                <option value="Medium">Medium Priority</option>
+                <option value="Meduim">Meduim Priority</option>
                 <option value="High">High Priority</option>
               </select>
             </div>
           </div>
 
           <div
-            className="form-action"
+            className="form-actions"
             style={{ display: "flex", gap: "10px", marginTop: "10px" }}
           >
             <button
-              type="submit"
               className="btn-primary"
+              type="submit"
               style={{ flex: 1 }}
-              onClick={handleAdd} 
-              >
-              {editingTask?'update':'add'}
-               Task        </button>
+              onClick={handleAdd}
+            >
+              {editingTask ? 'Update' : 'Add'}
+               Task
+            </button>
 
             <button
-              type="button"
               className="btn-secondary"
+              type="button"
               style={{ flex: 1 }}
               onClick={() =>
-                setFormData({
+                settaskData({
                   title: "",
-                  desc: "",
+                  description: "",
                   date: "",
-                  priority: "Medium",
+                  priority: "Low",
                 })
               }
             >

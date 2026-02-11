@@ -50,7 +50,7 @@ function Login() {
         saveData.password === Data.password
       )
       {
-        localStorage.setItem("loginData",JSON.stringify(Data));
+        localStorage.setItem("Data", JSON.stringify(Data));
       alert("Login Successfully.......");
       navigate("/dashboard");
       }

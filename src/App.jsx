@@ -4,22 +4,19 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
-
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import AuthGuard from "./auth/AuthGuard";
 
 const DefaultRoute = () => {
-  const authData = JSON.parse(localStorage.getItem("authData"));
-  if (authData) {
-    return <Navigate to="/login" replace />;
+  const LoginData = JSON.parse(localStorage.getItem('Data'));
+  if (LoginData) {
+    return <Navigate to="/dashboard" replace />;
   }
-  else if (authData)
-    {return <Navigate to="/register" replace />;}
-
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/login" replace />;
 };
 
 function App() {
@@ -30,15 +27,15 @@ function App() {
     },
     {
       path: "/login",
-      element: <Login />,
+      element: (<AuthGuard required={false}><Login /></AuthGuard>),
     },
     {
       path: "/register",
-      element: <Register />,
+      element:  (<AuthGuard required={false}><Register /></AuthGuard>),
     },
     {
       path: "/dashboard",
-      element:<Dashboard/>
+      element: (<AuthGuard required={true}><Dashboard/></AuthGuard>),
     },
   ]);
 
